@@ -18,7 +18,7 @@ On push to main & prod:
 On pr to prod:
 - Download report
 - Tag PR size
-  -![image](https://user-images.githubusercontent.com/73124349/205486155-3e72e080-8e2d-4bd8-8e71-adce7fcaa5fa.png)
+  - ![image](https://user-images.githubusercontent.com/73124349/205486155-3e72e080-8e2d-4bd8-8e71-adce7fcaa5fa.png)
 - Zip code for delivery
 - Send telegram message to stakeholder
 - Send report to stakeholder
