@@ -1,4 +1,4 @@
-# DevOps_Oct2022_Team1_Week6
+# DevOps_Oct2022_Team1_Week7
 | Name | Role | Description |
 |---|---|---|
 Dong En | Scrum Master | Facilitate scrum processes and enforces scrum practises
