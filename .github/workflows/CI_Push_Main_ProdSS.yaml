@@ -1,0 +1,57 @@
+name: CI Push Main & Prod
+
+on:
+  push:
+    branches: 
+    - main
+    - prod
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    - name: Install Libraries
+      run: |
+        pip install flake8 pytest pytest-cov
+    - name: Checkout Own Repo
+      uses: actions/checkout@v2
+      with:
+        repository: DevOps-Team-1-2022/DevOps_Oct2022_Team1_Week6
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: List Contents
+      run: |
+        ls
+    - name: Check Test Files Existence
+      id: check_test_exists
+      uses: andstor/file-existence-action@v2
+      with:
+        files: "test_*.py"
+    - name: Test with Pytest
+      if: steps.check_test_exists.outputs.files_exists == 'true'
+      run: |
+        #only run pytest when test_*.py exists
+        pytest -v -cov --junitxml=test_report.xml
+    - name: Create Issue On Build Failed
+      if: ${{ failure() }}
+      uses: JasonEtco/create-an-issue@v2.8.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        filename: ".github/ISSUE_TEMPLATE.md"
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action/composite@v2
+      if: always()
+      with:
+        junit_files: "test_report.xml"
+    - uses: actions/upload-artifact@v3
+      with:
+        name: test_report
+        path: test_report.xml

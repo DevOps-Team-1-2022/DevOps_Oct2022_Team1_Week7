@@ -1,0 +1,55 @@
+name: Delivery
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - 'prod'
+
+jobs:    
+  CreateDevRelease:
+    name: Create Dev Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: CI_Push_Main_ProdSS.yaml
+          name: test_report
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test_report
+          path: test_report.xml
+      - name: Create Zip
+        uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          filename: 'release.zip'
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: "-854857525"
+          token: "5669366185:AAFQ0KZ61oJxnh73V0Ove0-RiWY4LKbvx5I"
+          message: |
+            Delivery of Code to Stakeholders
+            
+            ${{ github.actor }} created a PR:
+            PR message: ${{ github.event.pull_request.title }}
+
+            Repository: ${{ github.repository }}
+
+            See changes: https://github.com/${{ github.repository }}/pull/${{github.event.number}}
+      - name: send telegram report
+        uses: appleboy/telegram-action@master
+        with:
+          to: "-854857525"
+          token: "5669366185:AAFQ0KZ61oJxnh73V0Ove0-RiWY4LKbvx5I"
+          document: 'test_report.xml'
+          message: "Testing Report"
+      - name: send telegram zip file
+        uses: appleboy/telegram-action@master
+        with:
+          to: "-854857525"
+          token: "5669366185:AAFQ0KZ61oJxnh73V0Ove0-RiWY4LKbvx5I"
+          document: 'release.zip'
+          message: "Release Files"

@@ -1,0 +1,33 @@
+name: Deployment
+
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:    
+  CreateRelease:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download Artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: CI_Push_Main_ProdSS.yaml
+          name: test_report
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: test_report
+          path: test_report.xml
+      - name: Create Zip
+        uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          filename: 'release.zip'
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: 'release.zip'
