@@ -1,4 +1,4 @@
-# DevOps_Oct2022_Team1_Week4
+# DevOps_Oct2022_Team1_Week6
 | Name | Role | Description |
 |---|---|---|
 Dong En | Scrum Master | Facilitate scrum processes and enforces scrum practises
@@ -7,12 +7,35 @@ Vernon | Quality Assurance | Test Cases for component and above level tests
 Lincoln | Quality Assurance | Test Cases for component and above level tests
 Balqis | Developer | Development and more development
 
-Please refer to teams for functional test cases
+# Pipelines
+## CI Push Main & Prod
+On push to main & prod:
+- Test code with flake8 and pytest
+- Create issue if failed
+- Upload test report
 
+## CDelivery
+On pr to prod:
+- Download report
+- Tag PR size
+- Zip code for delivery
+- Send telegram message to stakeholder
+- Send report to stakeholder
+- Send zipped code to stakeholder
+  - ![image](https://user-images.githubusercontent.com/73124349/205447665-551a43d7-72a8-43bf-8b6f-b61659662e6f.png)
+
+## CDeploy
+On push of a tag:
+- Download report
+- Zip code for release
+- Relase zip with tag as versioning
+
+# Deployment Instructions
 ### Deployement Prod Release
 Release is created everytime there is a push of tag. 
 
-How to push tags? Open the terminal, and cd to this repository. Run the following command with the corresponding version number. 
+### A. Release from CLI 💥
+Open the terminal, and cd to this repository. Run the following command with the corresponding version number. 
 
 _Create tag_
 ```console
@@ -25,6 +48,36 @@ _Push tag -> trigger CDeployement workflow -> create release_
 git push origin v1.0.4
 
 ```
+
+### B. Release from Github UI 💥
+
+1. Click "Releases" link
+![image](https://user-images.githubusercontent.com/72959939/205445842-38072d72-dfa7-4213-a855-417751e1f2e1.png)
+
+2. Click "Draft a new release" button
+![image](https://user-images.githubusercontent.com/72959939/205445877-67100dcc-063d-4574-b997-9f090dde29ba.png)
+
+3. Create tag
+
+![image](https://user-images.githubusercontent.com/72959939/205445770-0a5afb7b-d412-4c37-aa29-a64324d6f687.png)
+
+4.Fill in all the fields. Set as "Pre release".
+![image](https://user-images.githubusercontent.com/72959939/205446049-5c27d468-58e9-464e-885f-631da169fd61.png)
+
+5. Click "Publish release" button
+
+![image](https://user-images.githubusercontent.com/72959939/205446181-2055e200-dec6-416a-a450-1f4bc1cec9dc.png)
+
+
+6. After PR is merged from Main to Prod branch, click on edit button and set as "Latest release". This will make it appear as the latest release but will not re-trigger the CDeploy workflow. Which is good because there may be changes in the period between release is created and code is merged to Prod, (if retrigger, then it may not be the one that was in Main to Prod PR) --> but Balqis may be tripping
+![image](https://user-images.githubusercontent.com/72959939/205446486-552a8262-9ad0-4b08-a30e-29b5ebb89764.png)
+
+![image](https://user-images.githubusercontent.com/72959939/205446498-581308ce-d65f-4d26-81f7-353b01353f96.png)
+
+![image](https://user-images.githubusercontent.com/72959939/205446609-29bd24ad-a40b-4fbc-8423-1ec52f22ff65.png)
+
+
+
 
 #### Tags background:
 ![image](https://user-images.githubusercontent.com/72959939/205435547-3602221f-3bce-4d77-b283-c5b946b29171.png)
